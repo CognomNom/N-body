@@ -1,34 +1,39 @@
 clear all; close all; clc
 % We define the initial conditions of our problem. 
 global body
+fr = 1000;
 load('solar_system')
 % Time running
 t0 = 0;
-tf = 10000000000;
-%tf = 100*32*10^6;
-times = linspace(t0,tf,100000);
-[T,Y]=solv_nbody(sol0,times);
-plot(Y(:,1),Y(:,2),'y')
+tf = 100000000;
+intervals = floor((tf-t0)/100000);
+times = t0:100000:tf;
+len = length(body);
+figure;
 hold on
-plot(Y(end,1),Y(end,2),'oy')
-plot(Y(:,5),Y(:,6),'b')
-plot(Y(end,5),Y(end,6),'ob')
-plot(Y(:,9),Y(:,10),'Color',[0.8,0.4,0])
-plot(Y(end,9),Y(end,10),'o','Color',[0.8,0.4,0])
-plot(Y(:,13),Y(:,14),'r')
-plot(Y(end,13),Y(end,14),'or')
-plot(Y(:,17),Y(:,18),'Color',[0.5,0.5,0.5])
-plot(Y(end,17),Y(end,18),'o','Color',[0.5,0.5,0.5])
-plot(Y(:,21),Y(:,22),'c')
-plot(Y(end,21),Y(end,22),'co')
-plot(Y(:,25),Y(:,26),'g')
-plot(Y(end,25),Y(end,26),'go')
-plot(Y(:,29),Y(:,30),'Color',[0.5 0.5 1])
-plot(Y(end,29),Y(end,30),'o','Color',[0.5 0.5 1])
-plot(Y(:,33),Y(:,34),'Color',[0 0 0.4])
-plot(Y(end,33),Y(end,34),'o','Color',[0 0 0.4])
-axis([-1 1 -1 1]*5000*10^9)
+axis([-1 1 -1 1]*fr*10^9)
 axis square
+h = zeros(len,1); % In order to modify the position of the objects
+for i = 1:intervals
+    tic;
+    tim = linspace(times(i),times(i+1),100);
+    [T,Y]=solv_nbody(sol0,tim);
+    sol0 = Y(end,:);
+    for j=0:len-1
+        plot(Y(:,4*j+1),Y(:,4*j+2),'Color',body(j+1).colo);
+        if h(j+1)
+            set(h(j+1),'XData',Y(end,4*j+1));
+            set(h(j+1),'YData',Y(end,4*j+2));
+            set(t,'String',['t = ' num2str(times(i+1)) ' s']);
+        else
+            h(j+1) = plot(Y(end,4*j+1),Y(end,4*j+2),'o','Color',body(j+1).colo);
+            t = text(fr*10^9,fr*10^9,['t = ' num2str(times(i+1)) ' s']);
+        end
+    end
+    ti1(i) = toc;
+    pause(0.01)
+    ti2(i) = toc;
+end
 hold off
 % cosas raras
 a = fft(Y(:,2)); L = length(T); P2 = abs(a/L);
