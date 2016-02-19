@@ -1,7 +1,7 @@
 clear all; close all; clc
-% We define the initial conditions of our problem. 
 global body
-fr = 1000;
+fr = 1000; % This represents the extent of the graphical display in 10^9 km
+% We load the initial conditions of our problem. 
 load('solar_system')
 % Time running
 t0 = 0;
@@ -24,15 +24,18 @@ for i = 1:intervals
         if h(j+1)
             set(h(j+1),'XData',Y(end,4*j+1));
             set(h(j+1),'YData',Y(end,4*j+2));
-            set(t,'String',['t = ' num2str(times(i+1)) ' s']);
+            if ~j
+                set(t,'String',['t = ' num2str(times(i+1)) ' s']);
+            end
         else
             h(j+1) = plot(Y(end,4*j+1),Y(end,4*j+2),'o','Color',body(j+1).colo);
-            t = text(fr*10^9,fr*10^9,['t = ' num2str(times(i+1)) ' s']);
+            if ~j
+                t = text(fr*10^9,fr*10^9,['t = ' num2str(times(i+1)) ' s']);
+            end
         end
     end
-    ti1(i) = toc;
-    pause(0.01)
-    ti2(i) = toc;
+    ti1 = toc;
+    pause(0.1-ti1)
 end
 hold off
 % cosas raras
