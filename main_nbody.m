@@ -1,11 +1,12 @@
 clear all; close all; clc
 global body
 fr = 1000; % This represents the extent of the graphical display in 10^9 km
+[dat,tf] = tui_nbody;
 % We load the initial conditions of our problem. 
-load('solar_system')
+load(dat)
+
 % Time running
 t0 = 0;
-tf = 100000000;
 intervals = floor((tf-t0)/100000);
 times = t0:100000:tf;
 len = length(body);
