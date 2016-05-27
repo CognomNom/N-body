@@ -12,7 +12,7 @@ if isnan(tf)
     fprintf('We didn''t understand the number you typed.\n\n')
     tf = define_time;
 else
-    fprintf('Simulation time: %.2g s\n',tf)
+    fprintf('Simulation time: %.2g s %.2g y\n',tf,tf/(365.25*24*3600))
 end
 end
 function dat = define_archive
