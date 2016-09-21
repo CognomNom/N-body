@@ -1,6 +1,6 @@
 function [Yd] = func_nbody(~,Y)
 %func_nbody Function calculating the differential equation.
-%   In this function we obtain Yd, the derivatie with respect to time of Y.
+%   In this function we obtain Yd, the derivative with respect to time of Y.
 %   This function is used as an argument of the ode function.
 global body
 len = length(Y);

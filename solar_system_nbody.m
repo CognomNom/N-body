@@ -1,4 +1,4 @@
-clear all; close all; clc
+clear; close all; clc
 % We define the initial conditions of our problem. 
 % Body 0 - Sun
 body(1).mass = 1.98855*10^30; % Mass (in kg)

@@ -1,4 +1,4 @@
-clear all; close all; clc
+clear; close all; clc
 % Body 0 - Alpha Centauri A
 body(1).mass = 1.105*1.98855e30; % Mass (in kg)
 body(1).name = 'Alpha Centauri A';

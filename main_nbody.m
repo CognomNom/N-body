@@ -1,4 +1,4 @@
-clear all; close all; clc
+clear; close all; clc
 global body
 fr = 3000; % This represents the extent of the graphical display in 10^9 km
 [dat,tf] = tui_nbody;

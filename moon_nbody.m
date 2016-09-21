@@ -1,4 +1,4 @@
-clear all; close all; clc
+clear; close all; clc
 % Body 0 - Earth
 sol0(1,1) = 5.97237*10^24; % Mass
 sol0(2,1) = 0; % x position
