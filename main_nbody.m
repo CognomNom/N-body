@@ -1,14 +1,14 @@
 clear; close all; clc
 global body
-fr = 3000; % This represents the extent of the graphical display in 10^9 km
-[dat,tf] = tui_nbody;
+fr = 1e-1; % This represents the extent of the graphical display in 10^9 km
+[dat,tf,dt0,dt1] = tui_nbody;
 % We load the initial conditions of our problem. 
 load(dat)
 
 % Time running
 t0 = 0;
-intervals = floor((tf-t0)/10000000);
-times = t0:10000000:tf;
+intervals = floor((tf-t0)/dt0);
+times = t0:dt0:tf;
 len = length(body);
 figure;
 hold on
@@ -17,7 +17,7 @@ axis square
 h = zeros(len,1); % In order to modify the position of the objects
 for i = 1:intervals
     tic;
-    tim = linspace(times(i),times(i+1),100);
+    tim = linspace(times(i),times(i+1),ceil((times(i+1)-times(i))/dt1));
     [T,Y]=solv_nbody(sol0,tim);
     sol0 = Y(end,:);
     for j=0:len-1
