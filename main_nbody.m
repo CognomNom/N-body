@@ -10,51 +10,40 @@ t0 = 0;
 intervals = floor((tf-t0)/dt0);
 times = t0:dt0:tf;
 len = length(body);
-figure;
-hold on
-axis([-1 1 -1 1]*fr*10^9)
-axis square
 h = zeros(len,1); % In order to modify the position of the objects
+steps = ceil((times(2)-times(1))/dt1);
+Y = zeros(intervals*steps,4*len);
+t = zeros(intervals*steps,1);
+wb = waitbar(0,'Starting the simulation...');
+n = round(sqrt(intervals));
 for i = 1:intervals
-    tic;
-    tim = linspace(times(i),times(i+1),ceil((times(i+1)-times(i))/dt1));
-    [T,Y]=solv_nbody(sol0,tim);
-    sol0 = Y(end,:);
-    for j=0:len-1
-        plot(Y(:,4*j+1),Y(:,4*j+2),'Color',body(j+1).colo);
-        if h(j+1)
-            set(h(j+1),'XData',Y(end,4*j+1));
-            set(h(j+1),'YData',Y(end,4*j+2));
-            if ~j
-                set(t,'String',['t = ' num2str(times(i+1)) ' s']);
-            end
-        else
-            h(j+1) = plot(Y(end,4*j+1),Y(end,4*j+2),'o','Color',body(j+1).colo);
-            if ~j
-                t = text(fr*10^9,fr*10^9,['t = ' num2str(times(i+1)) ' s']);
-            end
-        end
+    tim = linspace(times(i),times(i+1),steps);
+    [T,ymat]=solv_nbody(sol0,tim);
+    Y(steps*(i-1)+1:steps*i,:) = ymat;
+    t(steps*(i-1)+1:steps*i) = T;
+    sol0 = ymat(end,:);
+    if ~rem(i,n)
+        waitbar(i/intervals,wb,['Running... ' num2str(i/intervals*100) '%'])
     end
-    ti1 = toc;
-    pause(0.1-ti1)
 end
-hold off
-% cosas raras
-a = fft(Y(:,2)); L = length(T); P2 = abs(a/L);
+delete(wb)
+%% cosas raras
+a = fft(Y(:,2)); L = intervals*steps; P2 = abs(a/L);
 P1 = P2(1:L/2+1);
 P1(2:end-1) = 2*P1(2:end-1);
-Fs = L/tf; f = Fs*(0:(L/2))/L;
+f = (0:(L/2))/(L*dt1);
 figure
 loglog(f,P1,'k')
+lim = get(gca,'YLim');
 hold on
-loglog([1 1]/(365.25*24*3600),[10^4,10^10],'b')
-loglog([1 1]/(224.701*24*3600),[10^4,10^10],'Color',[0.8,0.4,0])
-loglog([1 1]/(87.9691*24*3600),[10^4,10^10],'Color',[0.5,0.5,0.5])
-loglog([1 1]/(686.973*24*3600),[10^4,10^10],'r')
-loglog([1 1]/(4330.595*24*3600),[10^4,10^10],'c')
-loglog([1 1]/(10746.94*24*3600),[10^4,10^10],'g')
-loglog([1 1]/(30588.74*24*3600),[10^4,10^10],'Color',[0.5 0.5 1])
-loglog([1 1]/(59800*24*3600),[10^4,10^10],'Color',[0 0 0.4])
+loglog([1 1]/(365.25*24*3600),lim,'b')
+loglog([1 1]/(224.701*24*3600),lim,'Color',[0.8,0.4,0])
+loglog([1 1]/(87.9691*24*3600),lim,'Color',[0.5,0.5,0.5])
+loglog([1 1]/(686.973*24*3600),lim,'r')
+loglog([1 1]/(4330.595*24*3600),lim,'c')
+loglog([1 1]/(10746.94*24*3600),lim,'g')
+loglog([1 1]/(30588.74*24*3600),lim,'Color',[0.5 0.5 1])
+loglog([1 1]/(59800*24*3600),lim,'Color',[0 0 0.4])
 hold off
 % % Más cosas raras
 % v = VideoWriter('video2.avi','Uncompressed AVI');
