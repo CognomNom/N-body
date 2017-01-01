@@ -1,6 +1,5 @@
 clear; close all; clc
 global body
-fr = 1e-1; % This represents the extent of the graphical display in 10^9 km
 [dat,tf,dt0,dt1] = tui_nbody;
 % We load the initial conditions of our problem. 
 load(dat)
@@ -15,7 +14,7 @@ steps = ceil((times(2)-times(1))/dt1);
 Y = zeros(intervals*steps,4*len);
 t = zeros(intervals*steps,1);
 wb = waitbar(0,'Starting the simulation...');
-n = round(sqrt(intervals));
+n = round(min(sqrt(intervals),intervals/100));
 for i = 1:intervals
     tim = linspace(times(i),times(i+1),steps);
     [T,ymat]=solv_nbody(sol0,tim);
@@ -23,11 +22,10 @@ for i = 1:intervals
     t(steps*(i-1)+1:steps*i) = T;
     sol0 = ymat(end,:);
     if ~rem(i,n)
-        waitbar(i/intervals,wb,['Running... ' num2str(i/intervals*100) '%'])
     end
 end
 delete(wb)
-%% cosas raras
+% cosas raras
 a = fft(Y(:,2)); L = intervals*steps; P2 = abs(a/L);
 P1 = P2(1:L/2+1);
 P1(2:end-1) = 2*P1(2:end-1);
