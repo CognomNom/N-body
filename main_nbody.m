@@ -22,6 +22,7 @@ for i = 1:intervals
     t(steps*(i-1)+1:steps*i) = T;
     sol0 = ymat(end,:);
     if ~rem(i,n)
+        waitbar(i/intervals,wb,['Running... ' num2str(i/intervals*100,'%i') '%'])
     end
 end
 delete(wb)
